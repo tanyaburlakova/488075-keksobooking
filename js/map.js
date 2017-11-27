@@ -30,16 +30,25 @@ var APARTMENTS_TYPE = [
 ];
 var similarAds = [];
 
-var randomizer = function (max, min) {
+var mapPoints = document.querySelector('.map__pins');
+var fragment = document.createDocumentFragment();
+var mapCardTemplate = document.querySelector('#map-elements-template').content.querySelector('.map__card');
+var mapCards = document.querySelector('.map');
+
+var randomNumber = function (max, min) {
   return Math.floor(Math.random() * (max + 1 - min) + min);
 };
 
-var arrayRandomLength = function (data) {
+var randomItem = function (array) {
+  return array[Math.floor(Math.random() * array.length)];
+};
+
+var randomLengthArray = function (array) {
   var ramdomArray = [];
-  var arrayLength = randomizer(data.length - 1, 1);
+  var arrayLength = randomNumber(array.length - 1, 1);
 
   while (ramdomArray.length < arrayLength) {
-    var newElem = data[randomizer(data.length - 1, 0)];
+    var newElem = randomItem(array);
     if (ramdomArray.indexOf(newElem) === -1) {
       ramdomArray.push(newElem);
     }
@@ -48,11 +57,6 @@ var arrayRandomLength = function (data) {
   return ramdomArray;
 };
 
-var mapPoints = document.querySelector('.map__pins');
-var fragment = document.createDocumentFragment();
-var mapCardTemplate = document.querySelector('#map-elements-template').content.querySelector('.map__card');
-var mapCards = document.querySelector('.map');
-
 for (var i = 0; i < 8; i++) {
   var apartment = {
     'author': {
@@ -60,21 +64,21 @@ for (var i = 0; i < 8; i++) {
     },
 
     'offer': {
-      'title': APARTMENTS_DESCRIPTION[randomizer(APARTMENTS_DESCRIPTION.length - 1, 0)],
-      'price': randomizer(1000000, 1000),
-      'type': APARTMENTS_TYPE[randomizer(APARTMENTS_TYPE.length - 1, 0)],
-      'rooms': randomizer(5, 1),
-      'guests': randomizer(20, 1),
-      'checkin': CHECK_TIMES[randomizer(CHECK_TIMES.length - 1, 0)],
-      'checkout': CHECK_TIMES[randomizer(CHECK_TIMES.length - 1, 0)],
-      'features': arrayRandomLength(APARTMENTS_FEATURES),
+      'title': randomItem(APARTMENTS_DESCRIPTION),
+      'price': randomNumber(1000000, 1000),
+      'type': randomItem(APARTMENTS_TYPE),
+      'rooms': randomNumber(5, 1),
+      'guests': randomNumber(20, 1),
+      'checkin': randomItem(CHECK_TIMES),
+      'checkout': randomItem(CHECK_TIMES),
+      'features': randomLengthArray(APARTMENTS_FEATURES),
       'description': '',
       'photos': [],
     },
 
     'location': {
-      'x': randomizer(900, 300),
-      'y': randomizer(500, 100),
+      'x': randomNumber(900, 300),
+      'y': randomNumber(500, 100),
     },
   };
 
@@ -91,7 +95,7 @@ for (var pin = 0; pin < similarAds.length; pin++) {
   button.style.top = similarAds[pin].location.y - buttonSize / 2 + 'px';
   button.classList = 'map__pin';
 
-  button.innerHTML = '<img src="' + similarAds[pin].author.avatar + '" width="${buttonSize}" height="${buttonSize}" draggable="false">';
+  button.innerHTML = '<img src="' + similarAds[pin].author.avatar + '" width="' + buttonSize + '" height="' + buttonSize + '" draggable="false">';
 
   fragment.appendChild(button);
 }
