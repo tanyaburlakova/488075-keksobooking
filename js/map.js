@@ -94,7 +94,6 @@ for (var pin = 0; pin < similarAds.length; pin++) {
   button.style.left = similarAds[pin].location.x - buttonSize / 2 + 'px';
   button.style.top = similarAds[pin].location.y - buttonSize / 2 + 'px';
   button.classList = 'map__pin map__pin--similar hidden';
-  button.setAttribute('data-index', pin);
 
   button.innerHTML = '<img src="' + similarAds[pin].author.avatar + '" width="' + buttonSize + '" height="' + buttonSize + '" draggable="false">';
 
@@ -165,15 +164,15 @@ var pointsAddHandler = function () {
   adsForm.classList.remove('notice__form--disabled');
   classRemover(similarPins, 'hidden');
 
-  for (var field = 0; field < adsFormFieldsets.length; field++) {
-    adsFormFieldsets[field].disabled = false;
-  }
+  adsFormFieldsets.forEach(function (item) {
+    item.disabled = false;
+  });
 };
 
 mainPoint.addEventListener('mouseup', pointsAddHandler);
 
-var popupShowHandler = function (item) {
-  var popupCloser = popups[item].querySelector('.popup__close');
+var popupShowHandler = function (index) {
+  var popupCloser = popups[index].querySelector('.popup__close');
 
   var popupCloseHandler = function () {
     popupCloser.parentNode.classList.add('hidden');
@@ -181,7 +180,7 @@ var popupShowHandler = function (item) {
   };
 
   classAdder(popups, 'hidden');
-  popups[item].classList.remove('hidden');
+  popups[index].classList.remove('hidden');
 
   popupCloser.addEventListener('click', popupCloseHandler);
 
@@ -198,22 +197,21 @@ var popupShowHandler = function (item) {
   });
 };
 
-var showActiveStateHandler = function (event) {
-  var current = event.currentTarget;
+var showActiveStateHandler = function (item, index) {
   classRemover(similarPins, 'map__pin--active');
-  popupShowHandler(current.getAttribute('data-index'));
-  current.classList.add('map__pin--active');
+  popupShowHandler(index);
+  item.classList.add('map__pin--active');
 };
 
-for (var item = 0; item < similarPins.length; item++) {
-  similarPins[item].addEventListener('click', function (event) {
-    showActiveStateHandler(event);
+similarPins.forEach(function (item, index) {
+  item.addEventListener('click', function () {
+    showActiveStateHandler(item, index);
   });
 
-  similarPins[item].addEventListener('keydown', function (event) {
+  item.addEventListener('keydown', function (event) {
     if (event.keyCode === KEYCODE.enter) {
-      showActiveStateHandler(event);
+      showActiveStateHandler(item, index);
     }
   });
-}
+});
 
