@@ -136,9 +136,6 @@ for (var card = 0; card < similarAds.length; card++) {
 
 mapCards.insertBefore(fragment, document.querySelector('.map__filters-container'));
 
-
-// module4-task1
-
 var KEYCODE = {
   enter: 13,
   esc: 27,
@@ -152,15 +149,15 @@ var adsForm = document.querySelector('.notice__form');
 var adsFormFieldsets = adsForm.querySelectorAll('.form__element');
 
 var classRemover = function (arr, className) {
-  for (var item = 0; item < arr.length; item++) {
-    arr[item].classList.remove(className);
-  }
+  arr.forEach(function(item) {
+    item.classList.remove(className);
+  });
 };
 
 var classAdder = function (arr, className) {
-  for (var item = 0; item < arr.length; item++) {
-    arr[item].classList.add(className);
-  }
+  arr.forEach(function(item) {
+    item.classList.add(className);
+  });
 };
 
 var pointsAddHandler = function () {
