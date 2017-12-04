@@ -149,13 +149,13 @@ var adsForm = document.querySelector('.notice__form');
 var adsFormFieldsets = adsForm.querySelectorAll('.form__element');
 
 var classRemover = function (arr, className) {
-  arr.forEach(function(item) {
+  arr.forEach(function (item) {
     item.classList.remove(className);
   });
 };
 
 var classAdder = function (arr, className) {
-  arr.forEach(function(item) {
+  arr.forEach(function (item) {
     item.classList.add(className);
   });
 };
