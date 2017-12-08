@@ -215,3 +215,58 @@ similarPins.forEach(function (item, index) {
   });
 });
 
+
+var associatedControls = adsForm.querySelectorAll('.associated-control');
+
+var associatedValues = {
+  type: {
+    target: 'price',
+    'flat': 0,
+    'bungalo': 1000,
+    'house': 5000,
+    'palace': 10000,
+  },
+  price: {
+    target: 'type',
+    0: 'flat',
+    1000: 'bungalo',
+    5000: 'house',
+    100000: 'palace',
+  },
+  timein: {
+    target: 'timeout',
+    '12:00': '12:00',
+    '13:00': '13:00',
+    '14:00': '14:00',
+  },
+  timeout: {
+    target: 'timein',
+    '12:00': '12:00',
+    '13:00': '13:00',
+    '14:00': '14:00',
+  },
+  'room_number': {
+    target: 'capacity',
+    1: 3,
+    2: 2,
+    3: 1,
+    100: 0,
+  },
+  capacity: {
+    target: 'room_number',
+    2: 1,
+    2: 2,
+    1: 3,
+    0: 100,
+  },
+};
+
+associatedControls.forEach(function (item, index) {
+  item.addEventListener('change', function (event) {
+    var current = associatedValues[event.target.id].target;
+    var targetVal = associatedValues[event.target.id][event.target.value];
+    adsForm.querySelector('#' + current).value = targetVal;
+  });
+});
+
+
