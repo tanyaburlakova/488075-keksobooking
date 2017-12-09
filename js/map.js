@@ -216,57 +216,72 @@ similarPins.forEach(function (item, index) {
 });
 
 
-var associatedControls = adsForm.querySelectorAll('.associated-control');
+var formElm = adsForm.elements;
+var submitButton = adsForm.querySelector('.form__submit');
 
 var associatedValues = {
-  type: {
-    target: 'price',
-    'flat': 0,
-    'bungalo': 1000,
+  'type': {
+    'target': 'price',
+    'flat': 1000,
+    'bungalo': 0,
     'house': 5000,
     'palace': 10000,
   },
-  price: {
-    target: 'type',
-    0: 'flat',
-    1000: 'bungalo',
-    5000: 'house',
-    100000: 'palace',
+  'price': {
+    'target': 'type',
+    '0': 'flat',
+    '1000': 'bungalo',
+    '5000': 'house',
+    '100000': 'palace',
   },
-  timein: {
-    target: 'timeout',
+  'timein': {
+    'target': 'timeout',
     '12:00': '12:00',
     '13:00': '13:00',
     '14:00': '14:00',
   },
-  timeout: {
-    target: 'timein',
+  'timeout': {
+    'target': 'timein',
     '12:00': '12:00',
     '13:00': '13:00',
     '14:00': '14:00',
   },
   'room_number': {
-    target: 'capacity',
-    1: 3,
-    2: 2,
-    3: 1,
-    100: 0,
+    'target': 'capacity',
+    '1': 1,
+    '2': 2,
+    '3': 3,
+    '100': 0,
   },
-  capacity: {
-    target: 'room_number',
-    2: 1,
-    2: 2,
-    1: 3,
-    0: 100,
+  'capacity': {
+    'target': 'room_number',
+    '3': 3,
+    '2': 2,
+    '1': 1,
+    '0': 100,
   },
 };
 
-associatedControls.forEach(function (item, index) {
-  item.addEventListener('change', function (event) {
-    var current = associatedValues[event.target.id].target;
-    var targetVal = associatedValues[event.target.id][event.target.value];
-    adsForm.querySelector('#' + current).value = targetVal;
-  });
-});
+for (var element = 0; element < formElm.length; element++) {
+  formElm[element].addEventListener('change', function (event) {
+    if (event.target.classList.contains('associated-control')) {
+      var current = associatedValues[event.target.id].target;
+      var targetVal = associatedValues[event.target.id][event.target.value];
+      adsForm.querySelector('#' + current).value = targetVal;
+    }
 
+    if (event.target.validity.valid) {
+      event.target.classList.remove('error');
+    }
+  });
+}
+
+submitButton.addEventListener('click', function (event) {
+  for (var input = 0; input < formElm.length; input++) {
+    if (!formElm[input].validity.valid) {
+      formElm[input].classList.add('error');
+      event.preventDefault();
+    }
+  }
+});
 

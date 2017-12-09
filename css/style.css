@@ -631,6 +631,10 @@ textarea:focus
     width: calc(100% - 20px);
 }
 
+.form__element .error {
+    border-color: red;
+}
+
 .notice__form .feature
 {
     display: inline-block;
