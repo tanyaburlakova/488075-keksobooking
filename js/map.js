@@ -216,7 +216,7 @@ similarPins.forEach(function (item, index) {
 });
 
 
-var formElm = adsForm.elements;
+var formElm = adsForm.querySelectorAll('.associated-control');
 var submitButton = adsForm.querySelector('.form__submit');
 
 var associatedValues = {
@@ -253,21 +253,28 @@ var associatedValues = {
     '3': 3,
     '100': 0,
   },
-  'capacity': {
-    'target': 'room_number',
-    '3': 3,
-    '2': 2,
-    '1': 1,
-    '0': 100,
-  },
 };
 
 for (var element = 0; element < formElm.length; element++) {
   formElm[element].addEventListener('change', function (event) {
-    if (event.target.classList.contains('associated-control')) {
-      var current = associatedValues[event.target.id].target;
-      var targetVal = associatedValues[event.target.id][event.target.value];
-      adsForm.querySelector('#' + current).value = targetVal;
+    var current = associatedValues[event.target.id].target;
+    var currentVal = associatedValues[event.target.id][event.target.value];
+    adsForm.querySelector('#' + current).value = currentVal;
+
+    if (event.target.id === 'room_number') {
+      var capacity = adsForm.querySelector('.capacity');
+
+      for (var option = 0; option < capacity.length; option++) {
+        var targetVal = parseInt(event.target.value, 10);
+        var optionVal = parseInt(capacity[option].value, 10);
+
+        capacity[option].disabled = true;
+
+        if ((targetVal >= optionVal && optionVal !== 0 && targetVal !== 100) ||
+            (targetVal === 100 && optionVal === 0)) {
+          capacity[option].disabled = false;
+        }
+      }
     }
 
     if (event.target.validity.valid) {
