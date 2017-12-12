@@ -215,39 +215,37 @@ similarPins.forEach(function (item, index) {
   });
 });
 
-
-var formElm = adsForm.querySelectorAll('.associated-control');
 var submitButton = adsForm.querySelector('.form__submit');
 
 var associatedValues = {
   'type': {
-    'target': 'price',
+    'linked': 'price',
     'flat': 1000,
     'bungalo': 0,
     'house': 5000,
     'palace': 10000,
   },
   'price': {
-    'target': 'type',
+    'linked': 'type',
     '0': 'flat',
     '1000': 'bungalo',
     '5000': 'house',
     '100000': 'palace',
   },
   'timein': {
-    'target': 'timeout',
+    'linked': 'timeout',
     '12:00': '12:00',
     '13:00': '13:00',
     '14:00': '14:00',
   },
   'timeout': {
-    'target': 'timein',
+    'linked': 'timein',
     '12:00': '12:00',
     '13:00': '13:00',
     '14:00': '14:00',
   },
   'room_number': {
-    'target': 'capacity',
+    'linked': 'capacity',
     '1': 1,
     '2': 2,
     '3': 3,
@@ -255,38 +253,42 @@ var associatedValues = {
   },
 };
 
-formElm.forEach(function (item) {
-  item.addEventListener('change', function (event) {
-    var current = associatedValues[event.target.id].target;
-    var currentVal = associatedValues[event.target.id][event.target.value];
-    adsForm.querySelector('#' + current).value = currentVal;
+adsForm.addEventListener('change', function (event) {
+  var target = event.target;
+  var linked = associatedValues[target.id].linked;
+  var linkedVal = associatedValues[target.id][target.value];
 
-    if (event.target.id === 'room_number') {
-      var capacity = adsForm.querySelector('.capacity');
+  if (!target.classList.contains('associated-control')) {
+    return;
+  }
 
-      for (var option = 0; option < capacity.length; option++) {
-        var targetVal = parseInt(event.target.value, 10);
-        var optionVal = parseInt(capacity[option].value, 10);
+  adsForm.querySelector('#' + linked).value = linkedVal;
 
-        capacity[option].disabled = true;
+  if (target.id === 'room_number') {
+    var linkedElm = adsForm.querySelector('.capacity');
 
-        if ((targetVal >= optionVal && optionVal !== 0 && targetVal !== 100) ||
-            (targetVal === 100 && optionVal === 0)) {
-          capacity[option].disabled = false;
-        }
+    for (var option = 0; option < linkedElm.length; option++) {
+      var mainVal = parseInt(target.value, 10);
+      var optionVal = parseInt(linkedElm[option].value, 10);
+
+      linkedElm[option].disabled = true;
+
+      if ((mainVal >= optionVal && optionVal !== 0 && mainVal !== 100) ||
+          (mainVal === 100 && optionVal === 0)) {
+        linkedElm[option].disabled = false;
       }
     }
+  }
 
-    if (event.target.validity.valid) {
-      event.target.classList.remove('error');
-    }
-  });
+  if (target.validity.valid) {
+    target.classList.remove('error');
+  }
 });
 
 submitButton.addEventListener('click', function (event) {
-  for (var input = 0; input < formElm.length; input++) {
-    if (!formElm[input].validity.valid) {
-      formElm[input].classList.add('error');
+  for (var input = 0; input < adsForm.elements.length; input++) {
+    if (!adsForm.elements[input].validity.valid) {
+      adsForm.elements[input].classList.add('error');
       event.preventDefault();
     }
   }
