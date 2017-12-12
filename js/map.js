@@ -255,8 +255,8 @@ var associatedValues = {
   },
 };
 
-for (var element = 0; element < formElm.length; element++) {
-  formElm[element].addEventListener('change', function (event) {
+formElm.forEach(function (item) {
+  item.addEventListener('change', function (event) {
     var current = associatedValues[event.target.id].target;
     var currentVal = associatedValues[event.target.id][event.target.value];
     adsForm.querySelector('#' + current).value = currentVal;
@@ -281,7 +281,7 @@ for (var element = 0; element < formElm.length; element++) {
       event.target.classList.remove('error');
     }
   });
-}
+});
 
 submitButton.addEventListener('click', function (event) {
   for (var input = 0; input < formElm.length; input++) {
