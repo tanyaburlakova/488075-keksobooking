@@ -38,7 +38,7 @@
   };
 
   var form = document.querySelector('.notice__form');
-  var submitButton = form.querySelector('.form__submit');
+  var submit = form.querySelector('.form__submit');
 
   var getValidGuestNumber = function (roomNumber) {
     var guestNumber = form.querySelector('.capacity');
@@ -74,7 +74,7 @@
     }
   });
 
-  submitButton.addEventListener('click', function (event) {
+  submit.addEventListener('click', function (event) {
     for (var i = 0; i < form.elements.length; i++) {
       if (!form.elements[i].validity.valid) {
         form.elements[i].classList.add('error');

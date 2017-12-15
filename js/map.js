@@ -17,14 +17,14 @@
   var popups = map.querySelectorAll('.map__card');
 
   var form = document.querySelector('.notice__form');
-  var formFieldsets = form.querySelectorAll('.form__element');
+  var formFields = form.querySelectorAll('.form__element');
 
   var pinsAddHandler = function () {
     map.classList.remove('map--faded');
     form.classList.remove('notice__form--disabled');
     window.util.classRemover(similarPins, 'hidden');
 
-    formFieldsets.forEach(function (item) {
+    formFields.forEach(function (item) {
       item.disabled = false;
     });
   };
