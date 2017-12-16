@@ -76,6 +76,58 @@
       }
     });
   });
+
+  mainPin.addEventListener('mousedown', function (event) {
+    event.preventDefault();
+
+    var target = event.target;
+    var container = map.querySelector('.map__pinsoverlay').getBoundingClientRect();
+    var dragZone = {
+      top: 100,
+      right: container.width,
+      bottom: 500,
+      left: container.left,
+    };
+    var startX = event.clientX;
+    var startY = event.clientY;
+
+    var pinMoveHandler = function (moveEvent) {
+      moveEvent.preventDefault();
+
+      var tempX = moveEvent.clientX;
+      var tempY = moveEvent.clientY;
+
+      if (tempY < dragZone.top) {
+        mainPin.style.top = dragZone.top + 'px';
+      } else if (tempY > dragZone.bottom - target.height) {
+        mainPin.style.top = dragZone.bottom - target.height + 'px';
+      } else {
+        mainPin.style.top = startY + ( tempY - startY )  + 'px';
+      }
+
+      if (dragZone.left + tempX  < target.width) {
+        mainPin.style.left = target.width + 'px';
+      } else if (tempX > dragZone.right - target.width) {
+        mainPin.style.left = dragZone.right - target.width + 'px';
+      } else {
+        mainPin.style.left = startX + ( tempX - startX ) + 'px';
+      }
+
+      form.elements['address'].value = 'x: ' + tempX + ', y: ' + tempY;
+    }
+
+    var pinDropHandler = function (upEvent) {
+      upEvent.preventDefault();
+
+      document.removeEventListener('mousemove', pinMoveHandler);
+      document.removeEventListener('mouseup', pinDropHandler);
+    };
+
+    document.addEventListener('mousemove', pinMoveHandler);
+    document.addEventListener('mouseup', pinDropHandler);
+  });
+
+
 })();
 
 
