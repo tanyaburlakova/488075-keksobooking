@@ -13,6 +13,7 @@
 
   var map = document.querySelector('.map');
   var mainPin = map.querySelector('.map__pin--main');
+  var mapPins = map.querySelector('.map__pins');
   var similarPins = map.querySelectorAll('.map__pin--similar');
   var popups = map.querySelectorAll('.map__card');
 
@@ -65,16 +66,22 @@
 
   mainPin.addEventListener('mouseup', pinsAddHandler);
 
-  similarPins.forEach(function (item, index) {
-    item.addEventListener('click', function () {
-      addPinActiveStateHandler(item, index);
-    });
+  mapPins.addEventListener('click', function (event) {
+    var target = event.target.parentNode;
+    var index = target.getAttribute('data-index');
 
-    item.addEventListener('keydown', function (event) {
-      if (event.keyCode === KEYCODE.enter) {
-        addPinActiveStateHandler(item, index);
-      }
-    });
+    if (target.classList.contains('map__pin--similar')) {
+      addPinActiveStateHandler(target, index);
+    }
+  });
+
+  mapPins.addEventListener('keydown', function (event) {
+    var target = event.target;
+    var index = target.getAttribute('data-index');
+
+    if (target.classList.contains('map__pin--similar') && event.keyCode === KEYCODE.enter) {
+      addPinActiveStateHandler(target, index);
+    }
   });
 
   mainPin.addEventListener('mousedown', function (event) {
@@ -122,8 +129,4 @@
     document.addEventListener('mousemove', pinMoveHandler);
     document.addEventListener('mouseup', pinDropHandler);
   });
-
-
 })();
-
-

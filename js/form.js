@@ -56,6 +56,14 @@
     }
   };
 
+  var validateForm = function () {
+    for (var i = 0; i < form.elements.length; i++) {
+      if (!form.elements[i].validity.valid) {
+        form.elements[i].classList.add('error');
+      }
+    }
+  };
+
   form.addEventListener('change', function (event) {
     var target = event.target;
 
@@ -76,11 +84,10 @@
   });
 
   submit.addEventListener('click', function (event) {
-    for (var i = 0; i < form.elements.length; i++) {
-      if (!form.elements[i].validity.valid) {
-        form.elements[i].classList.add('error');
-        event.preventDefault();
-      }
+    if (!form.checkValidity()) {
+      event.preventDefault();
     }
+
+    validateForm();
   });
 })();
