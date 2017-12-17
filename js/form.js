@@ -58,11 +58,12 @@
 
   form.addEventListener('change', function (event) {
     var target = event.target;
-    var linked = associatedValues[target.id].linked;
-    var linkedVal = associatedValues[target.id][target.value];
 
     if (target.classList.contains('associated-control')) {
-      form.querySelector('#' + linked).value = linkedVal;
+      var linkedElement = associatedValues[target.id].linked;
+      var linkedValue = associatedValues[target.id][target.value];
+
+      form.querySelector('#' + linkedElement).value = linkedValue;
 
       if (target.id === 'room_number') {
         getValidGuestNumber(target);

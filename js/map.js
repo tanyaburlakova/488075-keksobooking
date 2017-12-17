@@ -80,7 +80,6 @@
   mainPin.addEventListener('mousedown', function (event) {
     event.preventDefault();
 
-    var target = event.target;
     var container = map.querySelector('.map__pinsoverlay').getBoundingClientRect();
     var dragZone = {
       top: 100,
@@ -88,33 +87,30 @@
       bottom: 500,
       left: container.left,
     };
-    var startX = event.clientX;
-    var startY = event.clientY;
+    var start = {
+      x: event.clientX,
+      y: event.clientY,
+    };
 
     var pinMoveHandler = function (moveEvent) {
       moveEvent.preventDefault();
 
-      var tempX = moveEvent.clientX;
-      var tempY = moveEvent.clientY;
+      var sideShift = parseInt(window.getComputedStyle(mainPin).width, 10) / 2;
+      var shift = {
+        x: mainPin.offsetLeft - (start.x - moveEvent.clientX),
+        y: mainPin.offsetTop - (start.y - moveEvent.clientY),
+      };
 
-      if (tempY < dragZone.top) {
-        mainPin.style.top = dragZone.top + 'px';
-      } else if (tempY > dragZone.bottom - target.height) {
-        mainPin.style.top = dragZone.bottom - target.height + 'px';
-      } else {
-        mainPin.style.top = startY + ( tempY - startY )  + 'px';
-      }
+      start = {
+        x: moveEvent.clientX,
+        y: moveEvent.clientY,
+      };
 
-      if (dragZone.left + tempX  < target.width) {
-        mainPin.style.left = target.width + 'px';
-      } else if (tempX > dragZone.right - target.width) {
-        mainPin.style.left = dragZone.right - target.width + 'px';
-      } else {
-        mainPin.style.left = startX + ( tempX - startX ) + 'px';
-      }
+      mainPin.style.top = Math.min(Math.max((shift.y), dragZone.top), dragZone.bottom) + 'px';
+      mainPin.style.left = Math.min(Math.max((shift.x), dragZone.left + sideShift), dragZone.right - sideShift) + 'px';
 
-      form.elements['address'].value = 'x: ' + tempX + ', y: ' + tempY;
-    }
+      form.elements['address'].value = 'x: ' + moveEvent.clientX + ', y: ' + moveEvent.clientY;
+    };
 
     var pinDropHandler = function (upEvent) {
       upEvent.preventDefault();
