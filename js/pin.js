@@ -12,6 +12,7 @@
       pin.style.left = apartments[index].location.x - pinSize / 2 + 'px';
       pin.style.top = apartments[index].location.y - pinSize / 2 + 'px';
       pin.classList = 'map__pin map__pin--similar hidden';
+      pin.setAttribute('data-index', index);
 
       pin.innerHTML = '<img src="' + apartments[index].author.avatar + '" width="' + pinSize + '" height="' + pinSize + '" draggable="false">';
 

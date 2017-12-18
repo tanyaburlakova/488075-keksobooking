@@ -56,13 +56,22 @@
     }
   };
 
+  var validateForm = function () {
+    for (var i = 0; i < form.elements.length; i++) {
+      if (!form.elements[i].validity.valid) {
+        form.elements[i].classList.add('error');
+      }
+    }
+  };
+
   form.addEventListener('change', function (event) {
     var target = event.target;
-    var linked = associatedValues[target.id].linked;
-    var linkedVal = associatedValues[target.id][target.value];
 
     if (target.classList.contains('associated-control')) {
-      form.querySelector('#' + linked).value = linkedVal;
+      var linkedElement = associatedValues[target.id].linked;
+      var linkedValue = associatedValues[target.id][target.value];
+
+      form.querySelector('#' + linkedElement).value = linkedValue;
 
       if (target.id === 'room_number') {
         getValidGuestNumber(target);
@@ -75,11 +84,10 @@
   });
 
   submit.addEventListener('click', function (event) {
-    for (var i = 0; i < form.elements.length; i++) {
-      if (!form.elements[i].validity.valid) {
-        form.elements[i].classList.add('error');
-        event.preventDefault();
-      }
+    if (!form.checkValidity()) {
+      event.preventDefault();
     }
+
+    validateForm();
   });
 })();
