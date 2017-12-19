@@ -29,7 +29,6 @@
   };
 
   var form = document.querySelector('.notice__form');
-  var submit = form.querySelector('.form__submit');
 
   var validateForm = function () {
     for (var i = 0; i < form.elements.length; i++) {
@@ -86,11 +85,13 @@
     }
   });
 
-  submit.addEventListener('click', function (event) {
-    if (!form.checkValidity()) {
-      event.preventDefault();
-    }
-
+  form.addEventListener('submit', function (event) {
     validateForm();
+
+    window.backend.save(new FormData(form), function (res) {
+      form.querySelector('.form__reset').click();
+    });
+
+    event.preventDefault();
   });
 })();
