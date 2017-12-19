@@ -1,60 +1,35 @@
 'use strict';
 
 (function () {
-  var associatedValues = {
+  var fieldsValues = {
     'type': {
       'linked': 'price',
-      'flat': 1000,
-      'bungalo': 0,
-      'house': 5000,
-      'palace': 10000,
+      'data': ['flat', 'bungalo', 'house', 'palace'],
     },
     'price': {
       'linked': 'type',
-      '0': 'flat',
-      '1000': 'bungalo',
-      '5000': 'house',
-      '100000': 'palace',
+      'data': ['0', '1000', '5000', '100000'],
     },
     'timein': {
       'linked': 'timeout',
-      '12:00': '12:00',
-      '13:00': '13:00',
-      '14:00': '14:00',
+      'data': ['12:00', '13:00', '14:00'],
     },
     'timeout': {
       'linked': 'timein',
-      '12:00': '12:00',
-      '13:00': '13:00',
-      '14:00': '14:00',
+      'data': ['12:00', '13:00', '14:00'],
     },
     'room_number': {
       'linked': 'capacity',
-      '1': 1,
-      '2': 2,
-      '3': 3,
-      '100': 0,
+      'data': ['1', '2', '3', '100'],
+    },
+    'capacity': {
+      'linked': 'room_number',
+      'data': ['1', '2', '3', '0'],
     },
   };
 
   var form = document.querySelector('.notice__form');
   var submit = form.querySelector('.form__submit');
-
-  var getValidGuestNumber = function (roomNumber) {
-    var guestNumber = form.querySelector('.capacity');
-
-    for (var i = 0; i < guestNumber.length; i++) {
-      var room = parseInt(roomNumber.value, 10);
-      var guest = parseInt(guestNumber[i].value, 10);
-
-      guestNumber[i].disabled = true;
-
-      if ((room >= guest && guest !== 0 && room !== 100) ||
-          (room === 100 && guest === 0)) {
-        guestNumber[i].disabled = false;
-      }
-    }
-  };
 
   var validateForm = function () {
     for (var i = 0; i < form.elements.length; i++) {
@@ -64,18 +39,46 @@
     }
   };
 
+  var syncMutualFields = function (element) {
+    var result = fieldsValues[element.id].data.indexOf(element.value);
+
+    return fieldsValues[fieldsValues[element.id].linked].data[result];
+  };
+
+  var syncDifferentFields = function (element, linkedElement) {
+    var result = fieldsValues[element.id].data.indexOf(element.value);
+
+    for (var i = 0; i < linkedElement.length; i++) {
+      var room = parseInt(element.value, 10);
+      var guest = parseInt(linkedElement[i].value, 10);
+
+      linkedElement[i].disabled = true;
+
+      if ((room >= guest && guest !== 0 && room !== 100) ||
+          (room === 100 && guest === 0)) {
+        linkedElement[i].disabled = false;
+      }
+    }
+
+    return fieldsValues[fieldsValues[element.id].linked].data[result];
+  };
+
   form.addEventListener('change', function (event) {
     var target = event.target;
 
+    var callbacks = {
+      'type': syncMutualFields,
+      'price': syncMutualFields,
+      'timein': syncMutualFields,
+      'timeout': syncMutualFields,
+      'room_number': syncDifferentFields,
+    };
+
     if (target.classList.contains('associated-control')) {
-      var linkedElement = associatedValues[target.id].linked;
-      var linkedValue = associatedValues[target.id][target.value];
+      var currentElement = form.querySelector('#' + target.id);
+      var linkedElement = form.querySelector('#' + fieldsValues[target.id].linked);
 
-      form.querySelector('#' + linkedElement).value = linkedValue;
-
-      if (target.id === 'room_number') {
-        getValidGuestNumber(target);
-      }
+      window.synchronizeFields(currentElement, linkedElement, callbacks[target.id]);
     }
 
     if (target.validity.valid) {

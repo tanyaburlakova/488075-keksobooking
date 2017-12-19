@@ -36,7 +36,7 @@
   };
 
   var popupShowHandler = function (index) {
-    window.showCard(cards[index], function() {
+    window.showCard(cards[index], function () {
       var closer = cards[index].querySelector('.popup__close');
 
       closer.addEventListener('click', function (event) {
@@ -54,7 +54,7 @@
           popupCloseHandler(event.target);
         }
       });
-    })
+    });
   };
 
   var addPinActiveStateHandler = function (current, index) {
