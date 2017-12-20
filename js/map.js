@@ -132,12 +132,5 @@
     });
   }
 
-  var errorHandler = function (message) {
-    var notification = document.querySelector('.notification');
-
-    notification.innerHTML = message;
-    notification.style.display = 'block';
-  };
-
-  window.backend.load(successHandler, errorHandler);
+  window.backend.load(successHandler, window.util.errorHandler);
 })();

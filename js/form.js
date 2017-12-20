@@ -62,39 +62,48 @@
     return fieldsValues[fieldsValues[element.id].linked].data[result];
   };
 
-  form.addEventListener('change', function (event) {
-    var target = event.target;
+  var checkFields = function (target) {
+    var currentElement = form.querySelector('#' + target.id);
+    var linkedElement = form.querySelector('#' + fieldsValues[target.id].linked);
 
-    var callbacks = {
-      'type': syncMutualFields,
-      'price': syncMutualFields,
-      'timein': syncMutualFields,
-      'timeout': syncMutualFields,
-      'room_number': syncDifferentFields,
-    };
-
-    if (target.classList.contains('associated-control')) {
-      var currentElement = form.querySelector('#' + target.id);
-      var linkedElement = form.querySelector('#' + fieldsValues[target.id].linked);
-
-      window.synchronizeFields(currentElement, linkedElement, callbacks[target.id]);
+    if (target.classList.contains('room-nubmber')) {
+      window.synchronizeFields(currentElement, linkedElement, syncDifferentFields);
+    } else {
+      window.synchronizeFields(currentElement, linkedElement, syncMutualFields);
     }
 
     if (target.validity.valid) {
       target.classList.remove('error');
     }
+  };
+
+  var formInit = function () {
+    Array.from(form.elements).forEach(function (item) {
+      if (item.classList.contains('linked-control')) {
+        checkFields(item);
+      }
+    });
+  };
+
+  var successHandler = function () {
+    var resetBtn = form.querySelector('.form__reset');
+
+    resetBtn.click();
+  };
+
+  formInit();
+
+  form.addEventListener('change', function (event) {
+    if (event.target.classList.contains('linked-control')) {
+      checkFields(event.target);
+    }
   });
 
   form.addEventListener('submit', function (event) {
     var data = new FormData(form);
-    var resetBtn = form.querySelector('.form__reset');
-
-    validateForm();
-
-    window.backend.save(data, function (res) {
-      resetBtn.click();
-    });
 
     event.preventDefault();
+    validateForm();
+    window.backend.save(data, successHandler, window.util.errorHandler);
   });
 })();

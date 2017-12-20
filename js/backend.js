@@ -51,7 +51,7 @@
 
       xhr.timeout = 5000;
 
-      xhr.open('POST', 'https://1510.dump.academy/keksobookin');
+      xhr.open('POST', 'https://1510.dump.academy/keksobooking');
       xhr.send(data);
     },
   };
