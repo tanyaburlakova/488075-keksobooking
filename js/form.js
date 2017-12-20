@@ -86,10 +86,13 @@
   });
 
   form.addEventListener('submit', function (event) {
+    var data = new FormData(form);
+    var resetBtn = form.querySelector('.form__reset');
+
     validateForm();
 
-    window.backend.save(new FormData(form), function (res) {
-      form.querySelector('.form__reset').click();
+    window.backend.save(data, function (res) {
+      resetBtn.click();
     });
 
     event.preventDefault();

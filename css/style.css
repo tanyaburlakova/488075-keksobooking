@@ -851,3 +851,14 @@ textarea:focus
 {
     background-position: -10px -10px;
 }
+
+.notification {
+    position: fixed;
+    background: rgba(255, 0, 0, 0.7);
+    color: rgba(255, 255, 255, .9);
+    bottom: 10px;
+    padding: 10px;
+    right: 10px;
+    min-width: 150px;
+    display: none;
+}

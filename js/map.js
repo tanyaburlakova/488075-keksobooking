@@ -1,7 +1,7 @@
 'use strict';
 
 (function () {
-  window.backend.load(function (data) {
+  var successHandler = function (data) {
     var res = JSON.parse(data)
 
     window.renderPins(res);
@@ -130,5 +130,14 @@
       document.addEventListener('mousemove', pinMoveHandler);
       document.addEventListener('mouseup', pinDropHandler);
     });
-  });
+  }
+
+  var errorHandler = function (message) {
+    var notification = document.querySelector('.notification');
+
+    notification.innerHTML = message;
+    notification.style.display = 'block';
+  };
+
+  window.backend.load(successHandler, errorHandler);
 })();
