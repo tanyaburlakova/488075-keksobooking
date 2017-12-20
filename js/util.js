@@ -37,10 +37,18 @@
     },
 
     errorHandler: function (message) {
-      var notification = document.querySelector('.notification');
+      var notification = document.createElement('div');
+      var styles = 'position: fixed;' +
+        'background: rgba(255, 0, 0, 0.7);' +
+        'color: rgba(255, 255, 255, .9);' +
+        'bottom: 10px;' +
+        'padding: 10px;' +
+        'right: 10px;' +
+        'min-width: 150px;';
 
+      notification.setAttribute('style', styles);
       notification.innerHTML = message;
-      notification.style.display = 'block';
+      document.querySelector('body').appendChild(notification);
     },
   };
 })();

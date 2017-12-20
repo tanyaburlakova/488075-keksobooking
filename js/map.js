@@ -2,7 +2,7 @@
 
 (function () {
   var successHandler = function (data) {
-    var res = JSON.parse(data)
+    var res = JSON.parse(data);
 
     window.renderPins(res);
     window.renderCards(res);
@@ -130,7 +130,7 @@
       document.addEventListener('mousemove', pinMoveHandler);
       document.addEventListener('mouseup', pinDropHandler);
     });
-  }
+  };
 
   window.backend.load(successHandler, window.util.errorHandler);
 })();
