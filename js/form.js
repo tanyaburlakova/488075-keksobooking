@@ -77,12 +77,18 @@
     }
   };
 
-  var formInit = function() {
+  var formInit = function () {
     Array.from(form.elements).forEach(function (item) {
       if (item.classList.contains('linked-control')) {
         checkFields(item);
       }
     });
+  };
+
+  var successHandler = function () {
+    var resetBtn = form.querySelector('.form__reset');
+
+    resetBtn.click();
   };
 
   formInit();
@@ -94,8 +100,10 @@
   });
 
   form.addEventListener('submit', function (event) {
-    event.preventDefault();
+    var data = new FormData(form);
 
+    event.preventDefault();
     validateForm();
+    window.backend.save(data, successHandler, window.util.errorHandler);
   });
 })();
