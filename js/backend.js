@@ -1,60 +1,48 @@
 'use strict';
 
 (function () {
+  var TIMEOUT = 5000;
+  var URL = 'https://1510.dump.academy/keksobooking';
   var message;
+
+  var requestHandler = function (onLoad, onError) {
+    var xhr = new XMLHttpRequest();
+    xhr.responseType = 'json';
+
+    xhr.addEventListener('load', function () {
+      if (xhr.status !== 200) {
+        message = xhr.status + ': ' + xhr.responseText;
+        onError(message);
+      } else {
+        onLoad(xhr.response);
+      }
+    });
+
+    xhr.addEventListener('error', function () {
+      onError('Произошла ошибка!');
+    });
+
+    xhr.addEventListener('timeout', function () {
+      onError('Время ожидания ответа ' + xhr.timeout / 1000 + ' секунд превышено!');
+    });
+
+    xhr.timeout = TIMEOUT;
+
+    return xhr;
+  };
 
   window.backend = {
     load: function (onLoad, onError) {
-      var xhr = new XMLHttpRequest();
+      var xhr = requestHandler(onLoad, onError);
 
-      xhr.addEventListener('load', function () {
-        if (xhr.status !== 200) {
-          message = xhr.status + ': ' + xhr.responseText;
-          onError(message);
-        } else {
-          onLoad(xhr.responseText);
-        }
-      });
-
-      xhr.addEventListener('error', function () {
-        onError('Произошла ошибка!');
-      });
-
-      xhr.addEventListener('timeout', function () {
-        onError('Время ожидания ответа ' + xhr.timeout / 1000 + ' секунд превышено!');
-      });
-
-      xhr.timeout = 5000;
-
-      xhr.open('GET', 'https://1510.dump.academy/keksobooking/data');
+      xhr.open('GET', URL + '/data');
       xhr.send();
     },
 
     save: function (data, onLoad, onError) {
-      var xhr = new XMLHttpRequest();
+      var xhr = requestHandler(onLoad, onError);
 
-      xhr.responseType = 'json';
-
-      xhr.addEventListener('load', function () {
-        if (xhr.status !== 200) {
-          message = 'Что-то пошло не так статус: ' + xhr.status;
-          onError(message);
-        } else {
-          onLoad(xhr.response);
-        }
-      });
-
-      xhr.addEventListener('error', function () {
-        onError('Произошла ошибка!');
-      });
-
-      xhr.addEventListener('timeout', function () {
-        onError('Время ожидания ответа ' + xhr.timeout / 1000 + ' секунд превышено!');
-      });
-
-      xhr.timeout = 5000;
-
-      xhr.open('POST', 'https://1510.dump.academy/keksobooking');
+      xhr.open('POST', URL);
       xhr.send(data);
     },
   };
