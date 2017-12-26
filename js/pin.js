@@ -36,6 +36,9 @@
   };
 
   var pinKeydownHandler = function (event) {
+    var target = event.currentTarget;
+    var index = target.dataset.index;
+
     if (event.keyCode === window.KEY_CODE.ENTER) {
       window.card.render(window.data[index]);
     }

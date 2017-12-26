@@ -1,3 +1,5 @@
+'use strict';
+
 (function () {
   window.KEY_CODE = {
     ENTER: 13,
