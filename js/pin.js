@@ -92,32 +92,40 @@
 
       generateFilter(current);
 
-      data.forEach(function (item, index) {
-        // фильтр по параметрам
-        for (var key in filters) {
-          if (key !== 'features' && key !== 'price' && data[index].offer[key].toString() !== filters[key] && filters[key] !== 'any') {
+      data.forEach(function (item) {
+        // фильтр по особенностям
+        for (var feature in filters.features) {
+          if (item.offer.features.indexOf(filters.features[feature]) < 0) {
             return false;
           }
         }
 
-        // фильтр по особенностям
-        for (var feature in filters.features) {
-          if (item.offer.features.indexOf(filters.features[feature]) >= 0) {
-            return false;
-          }
+        // фильтр по типу апартаментов
+        if (filters.type && filters.type !== 'any' && item.offer.type !== filters.type) {
+          return false;
+        }
+
+        // фильтр по количеству комнат
+        if (filters.rooms && filters.rooms !== 'any' && item.offer.rooms !== parseInt(filters.rooms, 10)) {
+          return false;
+        }
+
+        // фильтр по количеству комнат
+        if (filters.guests && filters.guests !== 'any' && item.offer.guests !== parseInt(filters.guests, 10)) {
+          return false;
         }
 
         // фильтр по цене
         if (filters.price !== 'any') {
-          if (filters.price === 'low' && data[index].offer.price > 10000) {
+          if (filters.price === 'low' && item.offer.price > 10000) {
             return false;
           }
 
-          if (filters.price === 'middle' && (data[index].offer.price <= 10000 || data[index].offer.price >= 50000)) {
+          if (filters.price === 'middle' && (item.offer.price <= 10000 || item.offer.price >= 50000)) {
             return false;
           }
 
-          if (filters.price === 'high' && data[index].offer.price < 50000) {
+          if (filters.price === 'high' && item.offer.price < 50000) {
             return false;
           }
         }
