@@ -24,7 +24,7 @@
 
   var addPinsHandler = function () {
     activateForm();
-    window.pins.renderPins(window.data);
+    window.pins.render(window.data);
   };
 
   filters.addEventListener('change', function (event) {
