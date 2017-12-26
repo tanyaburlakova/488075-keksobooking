@@ -32,28 +32,26 @@
   var title = form.elements['title'];
   var address = form.elements['address'];
 
-  var syncMutualFields = function (element) {
-    var result = fieldsValues[element.id].data.indexOf(element.value);
-
-    return fieldsValues[fieldsValues[element.id].linked].data[result];
+  var syncMutualFields = function (element, data) {
+    element.value = data;
   };
 
-  var syncDifferentFields = function (element, linkedElement) {
-    var result = fieldsValues[element.id].data.indexOf(element.value);
+  var syncDifferentFields = function (element, data) {
+    var currentElement = form.querySelector('.room-nubmber');
 
-    for (var i = 0; i < linkedElement.length; i++) {
-      var room = parseInt(element.value, 10);
-      var guest = parseInt(linkedElement[i].value, 10);
+    for (var i = 0; i < element.length; i++) {
+      var room = parseInt(currentElement.value, 10);
+      var guest = parseInt(element[i].value, 10);
 
-      linkedElement[i].disabled = true;
+      element[i].disabled = true;
 
       if ((room >= guest && guest !== 0 && room !== 100) ||
           (room === 100 && guest === 0)) {
-        linkedElement[i].disabled = false;
+        element[i].disabled = false;
       }
     }
 
-    return fieldsValues[fieldsValues[element.id].linked].data[result];
+    element.value = data;
   };
 
   var checkFields = function (target) {
@@ -61,13 +59,9 @@
     var linkedElement = form.querySelector('#' + fieldsValues[target.id].linked);
 
     if (target.classList.contains('room-nubmber')) {
-      window.synchronizeFields(currentElement, linkedElement, syncDifferentFields);
+      window.synchronizeFields(currentElement, linkedElement, fieldsValues, syncDifferentFields);
     } else {
-      window.synchronizeFields(currentElement, linkedElement, syncMutualFields);
-    }
-
-    if (target.validity.valid) {
-      target.classList.remove('error');
+      window.synchronizeFields(currentElement, linkedElement, fieldsValues, syncMutualFields);
     }
   };
 
@@ -97,16 +91,16 @@
     }
   };
 
-  title.addEventListener('invalid', checkTitleValidity);
-  title.addEventListener('blur', checkTitleValidity);
-  title.addEventListener('focus', checkTitleValidity);
-
   var successHandler = function () {
     form.reset();
     formInit();
   };
 
   formInit();
+
+  title.addEventListener('invalid', checkTitleValidity);
+  title.addEventListener('blur', checkTitleValidity);
+  title.addEventListener('focus', checkTitleValidity);
 
   form.addEventListener('change', function (event) {
     if (event.target.classList.contains('linked-control')) {
