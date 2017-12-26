@@ -4,18 +4,32 @@
   var map = document.querySelector('.map__pins');
   var fragment = document.createDocumentFragment();
 
-  window.renderPins = function (data) {
-    var pins = map.querySelectorAll('.map__pin--similar');
+  var createPin = function (data, index) {
+    var pin = document.createElement('button');
+    var pinSize = 40;
 
-    Array.from(pins).forEach(function (item) {
-      item.remove();
-    });
+    pin.style.left = data.location.x - pinSize / 2 + 'px';
+    pin.style.top = data.location.y - pinSize / 2 + 'px';
+    pin.classList = 'map__pin map__pin--similar';
+    pin.dataset.index = index;
 
-    data.forEach(function (item, index) {
-      var filters = window.filters;
-      var showPin = true;
+    pin.innerHTML = '<img src="' + data.author.avatar + '" width="' + pinSize + '" height="' + pinSize + '" draggable="false">';
 
-      if (typeof filters === 'object') {
+    fragment.appendChild(pin);
+  };
+
+  window.pin = {
+    renderPins: function (data) {
+      var pins = map.querySelectorAll('.map__pin--similar');
+
+      Array.from(pins).forEach(function (item) {
+        item.remove();
+      });
+
+      data.forEach(function (item, index) {
+        var filters = window.filters;
+        var showPin = true;
+
         // фильтр по параметрам
         for (var key in filters) {
           if (key !== 'features' && key !== 'price' && data[index].offer[key].toString() !== filters[key] && filters[key] !== 'any') {
@@ -31,7 +45,7 @@
         }
 
         // фильтр по цене
-        if (typeof filters.price !== 'undefined' && filters.price !== 'any') {
+        if (filters.price !== 'any') {
           if (filters.price === 'low' && data[index].offer.price > 10000) {
             showPin = false;
           }
@@ -44,23 +58,29 @@
             showPin = false;
           }
         }
+
+        if (showPin) {
+          createPin(data[index], index);
+        }
+      });
+
+      map.appendChild(fragment);
+    },
+
+    addPinActiveStateHandler: function (current) {
+      var index = current.dataset.index;
+
+      current.classList.add('map__pin--active');
+      window.card.show(window.data[index]);
+    },
+
+    removePinActiveStateHandler: function () {
+      if (map.querySelector('.map__pin--active')) {
+        var pinActive = document.querySelector('.map__pin--active');
+
+        pinActive.classList.remove('map__pin--active');
+        window.card.remove();
       }
-
-      if (showPin) {
-        var pin = document.createElement('button');
-        var pinSize = 40;
-
-        pin.style.left = data[index].location.x - pinSize / 2 + 'px';
-        pin.style.top = data[index].location.y - pinSize / 2 + 'px';
-        pin.classList = 'map__pin map__pin--similar';
-        pin.setAttribute('data-index', index);
-
-        pin.innerHTML = '<img src="' + data[index].author.avatar + '" width="' + pinSize + '" height="' + pinSize + '" draggable="false">';
-
-        fragment.appendChild(pin);
-      }
-    });
-
-    map.appendChild(fragment);
+    },
   };
 })();

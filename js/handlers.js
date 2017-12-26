@@ -1,6 +1,8 @@
 'use strict';
 
 (function () {
+  window.data = {};
+
   window.handlers = {
     errorHandler: function (message) {
       var notification = document.createElement('div');
@@ -15,6 +17,10 @@
       notification.setAttribute('style', styles);
       notification.innerHTML = message;
       document.querySelector('body').appendChild(notification);
+    },
+
+    successHandler: function (data) {
+      window.data = data;
     },
   };
 })();

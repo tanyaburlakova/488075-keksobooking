@@ -1,17 +1,17 @@
 'use strict';
 
 (function () {
+  var PIN_HEIGHT = 65;
   var form = document.querySelector('.notice__form');
-  var dragHandler = document.querySelector('.map__pin--main');
+  var dragElement = document.querySelector('.map__pin--main');
   var container = document.querySelector('.map__pinsoverlay').getBoundingClientRect();
   var dragZone = {
     top: 100,
     right: container.width,
     bottom: 500,
-    left: container.left,
   };
 
-  dragHandler.addEventListener('mousedown', function (event) {
+  dragElement.addEventListener('mousedown', function (event) {
     event.preventDefault();
 
     var start = {
@@ -22,10 +22,10 @@
     var pinMoveHandler = function (moveEvent) {
       moveEvent.preventDefault();
 
-      var sideShift = parseInt(window.getComputedStyle(dragHandler).width, 10) / 2;
+      var sideShift = parseInt(window.getComputedStyle(dragElement).width, 10) / 2;
       var shift = {
-        x: dragHandler.offsetLeft - (start.x - moveEvent.clientX),
-        y: dragHandler.offsetTop - (start.y - moveEvent.clientY),
+        x: dragElement.offsetLeft - (start.x - moveEvent.clientX),
+        y: dragElement.offsetTop - (start.y - moveEvent.clientY),
       };
 
       start = {
@@ -33,10 +33,10 @@
         y: moveEvent.clientY,
       };
 
-      dragHandler.style.top = Math.min(Math.max((shift.y), dragZone.top), dragZone.bottom) + 'px';
-      dragHandler.style.left = Math.min(Math.max((shift.x), dragZone.left + sideShift), dragZone.right - sideShift) + 'px';
+      dragElement.style.top = Math.min(Math.max((shift.y), dragZone.top), dragZone.bottom) + 'px';
+      dragElement.style.left = Math.min(Math.max((shift.x), sideShift), dragZone.right - sideShift) + 'px';
 
-      form.elements['address'].value = 'x: ' + moveEvent.clientX + ', y: ' + moveEvent.clientY;
+      form.elements['address'].value = 'x: ' + dragElement.offsetLeft + ', y: ' + (dragElement.offsetTop + PIN_HEIGHT);
     };
 
     var pinDropHandler = function (upEvent) {

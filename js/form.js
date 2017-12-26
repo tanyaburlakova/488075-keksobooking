@@ -4,7 +4,7 @@
   var fieldsValues = {
     'type': {
       'linked': 'price',
-      'data': ['flat', 'bungalo', 'house', 'palace'],
+      'data': ['bungalof', 'flat', 'house', 'palace'],
     },
     'price': {
       'linked': 'type',
@@ -29,14 +29,8 @@
   };
 
   var form = document.querySelector('.notice__form');
-
-  var validateForm = function () {
-    for (var i = 0; i < form.elements.length; i++) {
-      if (!form.elements[i].validity.valid) {
-        form.elements[i].classList.add('error');
-      }
-    }
-  };
+  var title = form.elements['title'];
+  var address = form.elements['address'];
 
   var syncMutualFields = function (element) {
     var result = fieldsValues[element.id].data.indexOf(element.value);
@@ -83,12 +77,33 @@
         checkFields(item);
       }
     });
+
+    address.value = 'x: 600, y: 430';
   };
 
-  var successHandler = function () {
-    var resetBtn = form.querySelector('.form__reset');
+  var addError = function (field) {
+    field.classList.add('error');
+  };
 
-    resetBtn.click();
+  var removeError = function (field) {
+    field.classList.remove('error');
+  };
+
+  var checkTitleValidity = function () {
+    addError(title);
+
+    if (title.validity.valid) {
+      removeError(title);
+    }
+  };
+
+  title.addEventListener('invalid', checkTitleValidity);
+  title.addEventListener('blur', checkTitleValidity);
+  title.addEventListener('focus', checkTitleValidity);
+
+  var successHandler = function () {
+    form.reset();
+    formInit();
   };
 
   formInit();
@@ -100,10 +115,7 @@
   });
 
   form.addEventListener('submit', function (event) {
-    var data = new FormData(form);
-
     event.preventDefault();
-    validateForm();
-    window.backend.save(data, successHandler, window.util.errorHandler);
+    window.backend.save(new FormData(form), successHandler, window.handlers.errorHandler);
   });
 })();
