@@ -2,7 +2,7 @@
 
 (function () {
   var fragment = document.createDocumentFragment();
-  var cardTemplate = document.querySelector('.map-elements-template').content.querySelector('.map__card');
+  var cardTemplate = document.querySelector('.map-elements-template').content.querySelector('.popup');
   var map = document.querySelector('.map');
 
   var generateCard = function (data) {
@@ -44,12 +44,33 @@
       apartmentFuturesList.appendChild(feature);
     });
 
+    card.querySelector('.popup__close').addEventListener('click', cardActionHandler);
+    document.addEventListener('keydown', cardActionHandler);
+
     return card;
   };
 
-  window.renderCard = function (data) {
-    fragment.appendChild(generateCard(data));
+  var cardActionHandler = function (event) {
+    var card = document.querySelector('.popup');
 
-    map.insertBefore(fragment, document.querySelector('.map__filters-container'));
+    if ((card && event.keyCode === window.KEY_CODE.ESCAPE) || event.type === 'click') {
+      card.querySelector('.popup__close').addEventListener('click', cardActionHandler);
+      window.card.remove();
+      window.pins.removeActiveState();
+    }
+  };
+
+  window.card = {
+    render: function (data) {
+      fragment.appendChild(generateCard(data));
+
+      map.insertBefore(fragment, document.querySelector('.map__filters-container'));
+    },
+
+    remove: function () {
+      var card = map.querySelector('.popup');
+
+      card.remove();
+    }
   };
 })();
