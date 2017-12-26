@@ -11,10 +11,17 @@
     var apartmentPicturesList = card.querySelector('.popup__pictures');
     var apartmentPicturesListItem = apartmentPicturesList.querySelector('.popup__pictures-item');
 
+    var apartmentTypes = {
+      'bungalo': 'Лачуга',
+      'flat': 'Квартира',
+      'house': 'Дом',
+      'palace': 'Дворец',
+    };
+
     card.querySelector('.popup__avatar').src = data.author.avatar;
     card.getElementsByTagName('h3')[0].textContent = data.offer.title;
     card.querySelector('.popup__price').textContent = data.offer.price + ' ₽/ночь';
-    card.getElementsByTagName('h4')[0].textContent = data.offer.type;
+    card.getElementsByTagName('h4')[0].textContent = apartmentTypes[data.offer.type];
     card.getElementsByTagName('p')[0].textContent = data.offer.rooms + ' для ' + data.offer.guests + ' гостей';
     card.getElementsByTagName('p')[2].textContent = 'Заезд после ' + data.offer.checkin + ', выезд до ' + data.offer.checkout;
     card.getElementsByTagName('p')[3].textContent = data.offer.description;
