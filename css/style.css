@@ -232,6 +232,7 @@ textarea:focus
 {
     position: absolute;
     z-index: 1;
+    cursor: pointer;
 
     width: 40px;
     height: 44px;
@@ -247,6 +248,7 @@ textarea:focus
 .map__pin img
 {
     padding: 3px;
+    position: relative;
 
     border-radius: 50%;
     background-color: #fff;

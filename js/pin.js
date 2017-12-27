@@ -1,6 +1,7 @@
 'use strict';
 
 (function () {
+  var PIN_SIZE = 40;
   var map = document.querySelector('.map__pins');
   var fragment = document.createDocumentFragment();
   var filters = {
@@ -9,14 +10,13 @@
 
   var createPin = function (data, index) {
     var pin = document.createElement('button');
-    var pinSize = 40;
 
-    pin.style.left = data.location.x - pinSize / 2 + 'px';
-    pin.style.top = data.location.y - pinSize / 2 + 'px';
+    pin.style.left = data.location.x - PIN_SIZE / 2 + 'px';
+    pin.style.top = data.location.y - PIN_SIZE / 2 + 'px';
     pin.classList = 'map__pin map__pin--similar';
     pin.dataset.index = index;
 
-    pin.innerHTML = '<img src="' + data.author.avatar + '" width="' + pinSize + '" height="' + pinSize + '" draggable="false">';
+    pin.innerHTML = '<img src="' + data.author.avatar + '" width="' + PIN_SIZE + '" height="' + PIN_SIZE + '" draggable="false">';
     pin.addEventListener('click', pinClickHandler);
     pin.addEventListener('click', pinKeydownHandler);
 
